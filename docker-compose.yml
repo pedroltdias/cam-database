@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0
+    container_name: cam_empresa_mysql
+    cap_add:
+      - SYS_NICE
+    restart: always
+    environment:
+      - MYSQL_DATABASE=empresa
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - '3308:3308'
+    volumes:
+      - db:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - backend
+      
+  adminer:
+    image: adminer
+    container_name: cam_empresa_adminer
+    restart: always
+    ports:
+      - 8082:8080
+    networks: 
+      - backend
+
+
+volumes:
+  db:
+    driver: local
+    
+networks:
+  backend:
+    driver: bridge
+    name: cam_empresa_network
